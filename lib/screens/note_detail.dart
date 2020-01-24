@@ -1,26 +1,46 @@
 import 'package:flutter/material.dart';
 
 class NoteDetail extends StatefulWidget {
+  String appBarTitle;
+
+  NoteDetail(this.appBarTitle);
+
   @override
-  _NoteDetailState createState() => _NoteDetailState();
+  _NoteDetailState createState() => _NoteDetailState(this.appBarTitle);
 }
 
 class _NoteDetailState extends State<NoteDetail> {
   static var _priorities = ['High', 'Low'];
+  String appBarTitle;
 
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
+  _NoteDetailState(this.appBarTitle);
+
   @override
   Widget build(BuildContext context) {
-
     TextStyle textStyle = Theme.of(context).textTheme.title;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Edit Note"),
-      ),
+    return WillPopScope(
 
+      // ignore: missing_return
+      onWillPop: () {
+        // Write some code control things, when user press back navigation button in device navigation bar
+        moveToLastScreen();
+      },
+
+        child: Scaffold(
+      appBar: AppBar(
+        title: Text(appBarTitle),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            // Write some code control things, when user press back button in device AppBar
+            moveToLastScreen();
+          },
+        ),
+      ),
       body: Padding(
         padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
         child: ListView(
@@ -29,12 +49,10 @@ class _NoteDetailState extends State<NoteDetail> {
             ListTile(
               title: DropdownButton(
                 items: _priorities.map((String dropDownStringItem) {
-                  return DropdownMenuItem<String> (
-                    value: dropDownStringItem,
-                    child: Text(dropDownStringItem)
-                  );
+                  return DropdownMenuItem<String>(
+                      value: dropDownStringItem,
+                      child: Text(dropDownStringItem));
                 }).toList(),
-
                 style: textStyle,
                 value: 'Low',
                 onChanged: (valueSelectedByuser) {
@@ -55,12 +73,10 @@ class _NoteDetailState extends State<NoteDetail> {
                   debugPrint("Something changed in Title Text Field");
                 },
                 decoration: InputDecoration(
-                  labelText: "Title",
-                  labelStyle: textStyle,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0)
-                  )
-                ),
+                    labelText: "Title",
+                    labelStyle: textStyle,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0))),
               ),
             ),
 
@@ -77,9 +93,7 @@ class _NoteDetailState extends State<NoteDetail> {
                     labelText: "Description",
                     labelStyle: textStyle,
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0)
-                    )
-                ),
+                        borderRadius: BorderRadius.circular(5.0))),
               ),
             ),
 
@@ -92,7 +106,10 @@ class _NoteDetailState extends State<NoteDetail> {
                     child: RaisedButton(
                       color: Theme.of(context).primaryColorDark,
                       textColor: Theme.of(context).primaryColorLight,
-                      child: Text("Save", textScaleFactor: 1.5,),
+                      child: Text(
+                        "Save",
+                        textScaleFactor: 1.5,
+                      ),
                       onPressed: () {
                         setState(() {
                           debugPrint("Save Button Clicked");
@@ -100,14 +117,17 @@ class _NoteDetailState extends State<NoteDetail> {
                       },
                     ),
                   ),
-
-                  Container(width: 5.0,),
-
+                  Container(
+                    width: 5.0,
+                  ),
                   Expanded(
                     child: RaisedButton(
                       color: Theme.of(context).primaryColorDark,
                       textColor: Theme.of(context).primaryColorLight,
-                      child: Text("Delete", textScaleFactor: 1.5,),
+                      child: Text(
+                        "Delete",
+                        textScaleFactor: 1.5,
+                      ),
                       onPressed: () {
                         setState(() {
                           debugPrint("Delete Button Clicked");
@@ -121,6 +141,10 @@ class _NoteDetailState extends State<NoteDetail> {
           ],
         ),
       ),
-    );
+    ));
+  }
+
+  void moveToLastScreen() {
+    Navigator.pop(context);
   }
 }
