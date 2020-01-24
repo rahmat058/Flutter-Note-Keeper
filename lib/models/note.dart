@@ -1,4 +1,3 @@
-
 class Note {
   int _id;
   String _title;
